@@ -3,12 +3,19 @@
 
 using namespace std;
 
+float normalize(float value, int range) {
+    // range = min border and max border
+    // example, range = 50 means converting values from -50 to 50
+    return (value - (-range)) / (range - (-range));
+}
+
 class PrimitivePainter {
     public:
     void draw_circle(SDL_Renderer* renderer, int centerx, int centery, int radius) {
         for (int y = -radius; y <= radius; y++) {
             for (int x = -radius; x <= radius; x++) {
                 if (x*x + y*y <= radius*radius) {
+                    SDL_SetRenderDrawColor(renderer, normalize(x, radius) * 255, normalize(y, radius) * 255, 0, 255);
                     SDL_RenderDrawPoint(renderer, centerx + x, centery + y);
                 }
             }
@@ -40,7 +47,6 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(ren);
         
         // Set color for drawing and draw circle
-        SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
         painter.draw_circle(ren, 100, 100, 50);
         
         SDL_RenderPresent(ren);
